@@ -1,6 +1,6 @@
 # Kaldi_CU
 
-Kaldi recipe for CU Kids Speech Corpus data model building
+Hello. Kaldi recipe for CU Kids Speech Corpus data model building
 
 **Steps**:
 Make sure kaldi is installed first before proceeding.
