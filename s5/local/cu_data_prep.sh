@@ -1,19 +1,17 @@
 # cu_data_prep.sh
 # Author: Renee Lu
 # About: This code is used to preparing the CU Kids' Speech Corpus for kaldi ASR training. 
+#        Should be run before creating text, wav.scp, segments and utt2spk files.
 #        Should be run from s5 directory.
-# Output: data/train/text 	- <speaker-ID>-<utterance-ID> TRANSCRIPTION
-#         data/train/wav.scp 	- <recording-ID> <extended-filename> 
-#         data/train/segments	- <utterance-ID> <recording-ID> <segment begin> <segment end>
-#         data/train/utt2spk	- <utterance-ID> <speaker-ID>
-# NOTE: each .wav file is called an utterance
+# Output: local/spkrs.txt
+#         local/uttspkr.txt
+
 set -e 	# Exit on error
 
 export LC_ALL=C	# To make sure sorting of files will be performed in same way as C++
 
 CU_ROOT=$1	# Path to speech corpus
 CUR_DIR=$2	# Path to s5 directory
-grads='1-5'	# Selected grade range of children e.g. Grades 1-5
 
 #echo "Getting the list of stories in the CU Kids' Speech Corpus..."
 #local/stories.sh $CU_ROOT $CUR_DIR 

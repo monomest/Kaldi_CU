@@ -2,6 +2,7 @@
 # Author: Renee Lu
 # About: This code uses local/uttInfo.txt to create all the
 #        files needed in kaldi data preparation.
+#        By doing so, it splits the data into train, test and dev.
 # Output: 'data/[train, test, dev]/text' which is a text file formatted like
 #         <speaker-ID>-<utterance-ID> <TRANSCRIPTION>
 #         
@@ -22,6 +23,7 @@
 #
 #        'local/uniqchar.txt' which is a file listing all the unique
 #         characters present in the 'text' file
+
 for dir in data/train data/test data/dev
 do
 	touch $dir/text
@@ -277,6 +279,10 @@ do
 
         # List all event labels from transcription
         grep -o "<[A-Z]*.>" $dir/text | sort -u >> local/tags_tmp.txt
+
+	# Replace event labels with <SPOKEN_NOISE>, <NOISE> or !SIL
+	sed -i 's/<B>/<SPOKEN_NOISE>/g; s/<BR>/<SPOKEN_NOISE>/g; s/<COUGH>/<NOISE>/g; s/<GARB>/<NOISE>/g; s/<SIL>/!SIL/g; s/<UU>/<SPOKEN_NOISE>/g' $dir/text
+
 done
 
 echo "Listing all unique characters in 'text' file to 'local/uniqchar.txt'..."

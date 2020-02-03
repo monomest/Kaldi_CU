@@ -3,6 +3,7 @@
 # run.sh
 # Author: Renee Lu
 # About: This code is for using the CU Kids' Speech Corpus for kaldi ASR training.
+
 . ./cmd.sh	# Setting local system jobs (local CPU - no external clusters)
 . ./path.sh	# Setting paths
 set -e

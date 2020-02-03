@@ -79,7 +79,7 @@ if [[ "$remove" -eq 1 ]]; then
 
 fi
 
-# Prepare data: generate text, wav.scp, utt2spk and segments file in data/train, data/test, data/dev...
+# Prepare data: generate local/uttspkr.txt which has all the information needed for required kaldi files. 
 local/cu_data_prep.sh $CU_ROOT $CUR_DIR
 
 # Creating 'text', 'wav.scp', 'segments' and 'utt2spk'
