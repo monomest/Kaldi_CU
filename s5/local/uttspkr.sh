@@ -76,8 +76,4 @@ do
 	done
 	cd ../
 done
-pwd
-# To remove '/92' characters: https://superuser.com/questions/199799/vim-shows-strange-characters-91-92
-sed -i "s/\x92/'/g" $CUR_DIR/local/uttInfo.txt
-
 echo "SUCCESS: Created a list of all utterance, speaker, filename and timing information in 'local/uttInfo.txt'"

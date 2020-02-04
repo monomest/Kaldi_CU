@@ -17,7 +17,7 @@ echo "===== PREPARING RAW DATA ====="
 echo
 
 # format.sh only needs to be run once, in the first time after unzipping speech corpus file 
-#echo "Removing all empty spaces in .trs transcription files..."
+#echo "Formatting transcription files (e.g. removing all empty spaces)..."
 #. ./format.sh $CU_ROOT
 #cd $CUR_DIR
 
@@ -56,7 +56,6 @@ echo "Creating 'feats.scp' in 'data/train' 'data/test' and 'data/dev'..."
 	utils/fix_data_dir.sh data/$part	# Fix the errors
 	done
 
-
 echo 
 echo "===== PREPARING LANGUAGE DATA ====="
 echo
@@ -70,6 +69,14 @@ echo
 local/cu_dict_prep.sh $CU_ROOT || exit 1  #I'm using set -e in the begining not sure if exit 1 needed
 #Prepare lang directory
 utils/prepare_lang.sh data/local/dict "<UNK>" data/local/lang data/lang || exit 1
+
+echo
+echo "===== CREATING LANGUAGE MODEL ====="
+echo
+
+# Train bigram LM
+echo "Training Language Model (LM)..."
+local/cu_train_srilm.sh $CU_ROOT $CUR_DIR
 
 echo
 echo "===== SUCCESS: run.sh has completed. ====="
