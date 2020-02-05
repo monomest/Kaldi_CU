@@ -18,13 +18,13 @@ echo "===== PREPARING RAW DATA ====="
 echo
 
 # format.sh only needs to be run once, in the first time after unzipping speech corpus file 
-echo "Formatting transcription files (e.g. removing all empty spaces)..."
-. ./format.sh $CU_ROOT
-cd $CUR_DIR
+#echo "Formatting transcription files (e.g. removing all empty spaces)..."
+#. ./format.sh $CU_ROOT
+#cd $CUR_DIR
 
 # fix.sh only needs to be run once, in the first time after unzipping speech corpus file
-echo "Applying some fixes to the data to remove edge cases..."
-. ./fix.sh $CU_ROOT
+#echo "Applying some fixes to the data to remove edge cases..."
+#. ./fix.sh $CU_ROOT
 
 echo "Converting .raw audio files into .wav formatted files..."
 . ./raw2wav.sh $CU_ROOT
