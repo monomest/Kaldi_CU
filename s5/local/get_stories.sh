@@ -3,15 +3,19 @@
 # About: This code is for getting all the text from the stories read aloud
 #        by the children in CU Kids Speech Corpus.
 #        Used for kaldi Language Modelling.
+# Output: local/storyIDs.txt: lists all the story names
+#         local/stories.txt: all the text from every unique story. Each unique story is on a new line. 
+#         local/storytmp_$storyID.txt: the text from the story with name $storyID
 
-#CU_ROOT=$1
-#CUR_DIR=$2
+CU_ROOT=$1
+CUR_DIR=$2
+dir=$3
 
-CUR_DIR=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/kaldi/egs/Kaldi_CU/s5  # Path to current s5 directory
-CU_ROOT=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/CU_Kids_Corpus   # Path to CU Kids Speech Corpus
+#CUR_DIR=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/kaldi/egs/Kaldi_CU/s5  # Path to current s5 directory
+#CU_ROOT=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/CU_Kids_Corpus   # Path to CU Kids Speech Corpus
 
-allIDs=$CUR_DIR/local/storyIDs.txt
-storiesfile=$CUR_DIR/local/stories.txt
+allIDs=$dir/tmp/storyIDs.txt
+storiesfile=$dir/tmp/stories.txt
 
 noname=0
 
@@ -36,7 +40,7 @@ for spkr in $spkrs; do
 			# Record the storyID
 			echo "$storyID" >> $allIDs
 			name=$(echo ${storyID// /_})
-			storytmp=$CUR_DIR/local/storytmp_$name.txt
+			storytmp=$dir/tmp/storytmp_$name.txt
 			touch $storytmp
 			# Iterate through every .txt file and write the text to local/storytmp_$storyID.txt file
 			for txtfile in $txt; do
@@ -71,7 +75,7 @@ for spkr in $spkrs; do
                         # Record the storyID
                         echo "$storyID" >> $allIDs
                         name=$(echo ${storyID// /_})
-                        storytmp=$CUR_DIR/local/storytmp_$name.txt
+                        storytmp=$dir/tmp/storytmp_$name.txt
                         touch $storytmp
                         # Iterate through every .trs file and write the text to local/storytmp_$storyID.txt file
                         for trsfile in $trs; do
@@ -115,21 +119,3 @@ for spkr in $spkrs; do
 	# Else, no transcription exists so move on.
 	cd ../../	
 done
-# DONE Go into the 'story' folder for each speaker
-	# DONE If .txt files exist, use them
-		# DONE Get the story ID
-		# DONE If the story ID has not been recorded
-			# DONE Record the story ID
-			# DONE Get all the text from the story
-		# DONE Else if the story ID has been recorded
-			# DONE Move onto next speaker	
-	# DONE Else if .trs files exist, use
-		# DONE Get the story ID
-		# DONE If the story ID has not been recorded
-			# DONE Record story ID
-			# DONE Get all the text from the story
-		# DONE Else if the story ID has been recorded
-			# DONE Move onto next speaker
-	# Else, no transcription exists
-		# Move onto the next speaker
-# Finally, convert lower case to upper case and normalise etc.
