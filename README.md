@@ -24,7 +24,13 @@ To execute the steps using the supercomputer katana.
 2. Create a new screen using ```screen -S nameOfSession```.
 3. Request an interactive GPU node using ```qsub -I -l select=1:ngpus=2:ncpus=16:mem=80gb,walltime=10:00:00```. Once the node is ready, you are now in the node. The terminal will show (zID@kxx), where kxx is your node. 
 4. Now you are inside the screen, and inside the GPU node. Run whatever process you need. 
-
+5. Load modules by running
+```
+module load cuda/10.1
+module load python/3.6.5
+module load intel/19.0.0.117
+module load sox/14.4.2
+```
 **Leaving katana**
 Asumming you are inside a screen, and inside a requested GPU node. 
 1. ```CtrlA D``` to detach from the screen session.

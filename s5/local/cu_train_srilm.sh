@@ -6,18 +6,18 @@
 #        for kaldi ASR training.
 #        Should be run from s5 directory.
 
-#CU_ROOT=$1
-#CUR_DIR=$2
+CU_ROOT=$1
+CUR_DIR=$2
 
-CUR_DIR=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/kaldi/egs/Kaldi_CU/s5  # Path to current s5 directory
-CU_ROOT=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/CU_Kids_Corpus   # Path to CU Kids Speech Corpus
+#CUR_DIR=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/kaldi/egs/Kaldi_CU/s5  # Path to current s5 directory
+#CU_ROOT=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/CU_Kids_Corpus   # Path to CU Kids Speech Corpus
 
 
 # Check that the path to the corpus is passed as the argument
-#if [ $# != 1 ]; then
-#        echo "Usage: $(basename $0) /path/to/cu_data"
-#        exit 1;
-#fi
+if [ $# != 2 ]; then
+        echo "Usage: $(basename $0) /path/to/cu_data /path/to/s5_directory"
+        exit 1;
+fi
 
 #Make sure that srilm installed
 echo $KALDI_ROOT/tools/srilm/bin/i686-m64

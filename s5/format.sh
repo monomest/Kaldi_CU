@@ -14,13 +14,15 @@ for file in $files; do
 	dos2unix -q $file
 	sed -i '/^$/d' $file
 	# Remove '/91' '/92' characters and replace with single quote
-        # Remove '/93' '/94' characters and replace with double quote
+        # Remove '/93' '/94' characters
 	# https://superuser.com/questions/199799/vim-shows-strange-characters-91-92
-	sed -i "s/\x91/'/g; s/\x92/'/g; s/\x93/\"/g; s/\x94/\"/g; s/\x85//g" $file
+	sed -i "s/\x91/'/g; s/\x92/'/g" $file
 	if [[ $file == *".txt" ]]; then
 		# Replace all tabs and spaces with a single space
 		sed -i "s/[[:space:]]\+/ /g" $file
 		# Remove all leading whitespaces
 		sed -i 's/^[ \t]*//' $file
+		# Remove '/93' '/94' characters
+        	sed -i "s/\x93/\"/g; s/\x94//g; s/\x85//g" $file
 	fi
 done

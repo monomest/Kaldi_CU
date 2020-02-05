@@ -10,20 +10,21 @@ set -e
 
 n=15	# Number of jobs
 CUR_DIR=$(pwd)	# Path to current s5 directory
-CU_ROOT=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/CU_Kids_Corpus	# Path to CU Kids Speech Corpus
+#CU_ROOT=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/CU_Kids_Corpus	# Path to CU Kids Speech Corpus
+CU_ROOT=/srv/scratch/z5160268/2020_TasteofResearch/CU_Kids_Corpus	# Path to CU Kids Speech Corpus on supercomputer
 
 echo
 echo "===== PREPARING RAW DATA ====="
 echo
 
 # format.sh only needs to be run once, in the first time after unzipping speech corpus file 
-#echo "Formatting transcription files (e.g. removing all empty spaces)..."
-#. ./format.sh $CU_ROOT
-#cd $CUR_DIR
+echo "Formatting transcription files (e.g. removing all empty spaces)..."
+. ./format.sh $CU_ROOT
+cd $CUR_DIR
 
 # fix.sh only needs to be run once, in the first time after unzipping speech corpus file
-#echo "Applying some fixes to the data to remove edge cases..."
-#. ./fix.sh $CU_ROOT
+echo "Applying some fixes to the data to remove edge cases..."
+. ./fix.sh $CU_ROOT
 
 echo "Converting .raw audio files into .wav formatted files..."
 . ./raw2wav.sh $CU_ROOT

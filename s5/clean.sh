@@ -5,7 +5,8 @@
 #        To be run in the s5 directory.
 
 CUR_DIR=$(pwd)	# Path to s5 directory
-CU_ROOT=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/CU_Kids_Corpus   # Path to CU Kids Speech Corpus
+#CU_ROOT=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/CU_Kids_Corpus   # Path to CU Kids Speech Corpus
+CU_ROOT=/srv/scratch/z5160268/2020_TasteofResearch/CU_Kids_Corpus	# Path to CU Kids Speech Corpus in supercomputer
 
 # Array of all files to remove
 allfiles=( local/spkrs.txt local/uttInfo.txt local/uniqchar.txt local/tags.txt )

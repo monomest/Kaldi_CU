@@ -257,7 +257,7 @@ for dir in data/train data/dev data/test; do
 	done
 
 	# Remove all floating hyphens and hyphens in words except for hyphens in hyphenated words, in the transcription text
-	sed -i 's/\( \|^\)-\([A-Z]\)/\1\2/g; s/\( \|^\)-\( \|^\)/\1\2/g; s/\([A-Z]\)-\( \|$\)/\1\2/g; s/\([A-Z]\)-\( \|^\)/\1\2/g' $dir/text
+	sed -i 's/\( \|^\)-\([A-Z]\)/\1\2/g; s/\( \|^\)-\(\|^\)/\1\2/g; s/\([A-Z]\)-\( \|$\)/\1\2/g' $dir/text
 
 	#Sort Files
         sort -o $dir/text $dir/text
