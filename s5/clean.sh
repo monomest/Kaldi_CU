@@ -8,54 +8,70 @@ CUR_DIR=$(pwd)	# Path to s5 directory
 #CU_ROOT=/media/renee/Windows/Users/rslaj/Documents/02_Work/2019_2020_Taste-of-Research/CU_Kids_Corpus   # Path to CU Kids Speech Corpus
 CU_ROOT=/srv/scratch/z5160268/2020_TasteofResearch/CU_Kids_Corpus	# Path to CU Kids Speech Corpus in supercomputer
 
-# Array of all files to remove
-allfiles=( local/spkrs.txt local/uttInfo.txt local/uniqchar.txt local/tags.txt )
-alldir=( data exp )
+# Array of files to remove that is common to all options
+commonf=( core.* logios.log )
+# Array of directories to remove that is common to all options
+commond=( exp data )
 
-# Array of files to remove to re-split data and re-train models
-splitfiles=( local/uniqchar.txt local/tags.txt )
-splitdir=( data exp )
+# Array of local files to remove: Option 0 and 1
+localf=( local/spkrs.txt local/spkrs.txt local/tags.txt local/uniqchar.txt local/uttInfo.txt )
+# Array of local directories to remove: Option 0 and 1
+locald=( local/data )
 
-# Array of files to remove while keeping train, test and dev portions the same
-portion=(  )
-echo "Do you want to:"
-read -r -p "(1) Remove all files and directories BUT keep the train, test and dev portions the same (2) Remove enough files so you can re-split the data and re-train the models (3) Remove literally ALL files and directories created by the scripts (including .wav files) [1/2/3] " response
-	if [[ "$response" =~ ^([3])$ ]]
-        then
-                echo "Removing ALL files created by the scripts..."
-		for file in "${allfiles[@]}"
-		do
- 			 echo "Removing the file $file..."
- 			 rm $file
+echo "Do you want to start at:"
+read -r -p "(0) STAGE 0: Remove everything, including .wav files (1) STAGE 1: Resplit data and train models again (2) STAGE 2: Keep existing data portions and train models again [0/1/2] " response
+	if [[ "$response" =~ ^([0])$ ]] || [[ "$response" =~ ^([1])$ ]]; then
+		echo "Removing files..."	
+                # Remove common files
+		for f in "${commonf[@]}"; do
+			echo "Removing file $f."
+			rm $f
 		done
-		echo "Removing ALL directories created by the scripts..."
-		for dir in "${alldir[@]}"
-		do
-			echo "Removing the directory $dir..."
-			rm -r $dir
+		# Remove common directories
+		for $d in "${commond[@]}"; do
+			echo "Removing directory $d."
+			rm -r $d
+		done 
+		# Remove local files
+		for $f in "${localf[@]}"; do
+			echo "Removing file $f."
+			rm $f
 		done
-		echo "Removing all .wav files..."
-		cd $CU_ROOT
-		find . -name "*.wav" -exec rm {} \;
-	elif [[ "$response" =~ ^([2])$ ]]
-	then
-                echo "Removing files to enable re-splitting data and re-training models..."
-		for file in "${splitfiles[@]}"
-		do
-			echo "Removing the file $file..."
-			rm $file
+		# Remove local/data
+		for $d in "${locald[@]}"; do
+			echo "Removing directory $d."
+			rm -r $d
 		done
-		
-		for dir in "${splitdir[@]}"
-		do 
-			echo "Removing the directory $dir..."
-			rm -r $dir
+		# Remove all .wav files if STAGE 0
+		if [[ "$response" =~ ^([0])$ ]]; then
+			echo "Removing all .wav files."
+			cd $CU_ROOT
+			find . -name "*.wav" -exec rm {} \;
+		fi
+	elif [[ "$response" =~ ^([2])$ ]]; then
+		echo "Removing files..."        
+                # Remove common files
+                for f in "${commonf[@]}"; do
+                        echo "Removing file $f."
+                        rm $f 
+                done 
+                # Remove common directories
+                for $d in "${commond[@]}"; do
+                        echo "Removing directory $d."
+                        rm -r $d 
+                done   
+		# Make s5/data directory
+		mkdir data
+		# Copy all the dev, test and train files into local
+		echo "Copying all split data portion files into s5/data"
+		for dir in dev test train; do
+        		mkdir data/$dir
+        		for file in segments spkrs text utt2spk wav.scp; do
+                		cp local/data/$dir/$file data/$dir/$file
+        		done
 		done
-	elif [[ "$response" =~ ^([1])$ ]]
-	then
-		echo "Removing files but keeping data split portions the same... "
 	else
-		echo "Your response is invalid. Please enter either '1' or '2' or '3' corresponding to which action you want to take."
+		echo "Your response is invalid. Please enter either '0' or '1' or '2' corresponding to which action you want to take."
 		
 	fi
 echo "DONE"

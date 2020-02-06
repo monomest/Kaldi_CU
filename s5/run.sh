@@ -43,11 +43,23 @@ if [ $stage -le 1 ]; then
 	echo "Cleaning acoustic data and splitting it into train, test and dev portions"
 	echo
 
-	# Check if data has already been split into train, test and dev data portions
-	# and also print out the number of train, test and dev speakers and utterances
-	# Depending on whether data has already been split or not, either resplit and keep
-	# the existing split data.
-	local/cu_data_check.sh $CU_ROOT $CUR_DIR
+	# Prepare data: generate local/uttspkr.txt which has all the information needed for required kaldi files. 
+	echo "Generating local/uttspkr.txt which has all the information required for kaldi data preparation..."
+	local/cu_data_prep.sh $CU_ROOT $CUR_DIR
+
+	# Creating 'text', 'wav.scp', 'segments' and 'utt2spk'
+	echo "Creating 'text' 'wav.scp' 'segments' and 'utt2spk' files in 'data/train 'data/test' and 'data/dev'..."
+        local/cu_split_data.sh
+
+	# Copying these created files into local/data directory
+	local/data2local.sh $CUR_DIR
+
+	# Find the number of speakers and utterances in train, test and dev data
+	for portion in train test dev; do
+        	numspkrs=$(wc -l < data/$portion/spkrs)
+        	numutt=$(wc -l < data/$portion/utt2spk)
+        	echo "There are $numspkrs speakers and $numutt utterances in $portion data."
+	done
 fi
 
 if [ $stage -le 2 ]; then
@@ -209,6 +221,7 @@ if [ $stage -le 11 ]; then
 	echo
 	echo "===== STAGE 11/11 LDA- MLLT + SAT ====="
 	echo "Speaker Adaptive Training (SAT)"
+	echo
 
 	#Train LDA-MLLT+SAT
 	steps/train_sat.sh 1800 9000 data/train data/lang exp/tri2b_ali exp/tri3b

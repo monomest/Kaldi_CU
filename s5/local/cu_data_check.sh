@@ -6,11 +6,11 @@
 CU_ROOT=$1
 CUR_DIR=$2
 
-echo "Checking if data has already been prepared..."
+echo "Checking if data has already been prepared in local/data..."
 exist=0
 remove=0
 split=0
-for part in data/train data/test data/dev; do
+for part in $CUR_DIR/local/data/train data/test data/dev; do
         if [ -e "$part/text" ];then
                 echo "WARNING: Found '$part/text' already existing"
                 exist=$(($exist+1))
