@@ -1,25 +1,10 @@
 
-===== PREPARING RAW DATA =====
-
-Converting .raw audio files into .wav formatted files...
-No .wav files found. Converting .raw audio into .wav files...
-Cleaning up names of new wav files...
-SUCCESS: Conversion completed!
-
-===== PREPARING ACOUSTIC DATA =====
+===== STAGE 1/11 PREPARING ACOUSTIC DATA =====
+Cleaning acoustic data and splitting it into train, test and dev portions
 
 Checking if data has already been prepared...
 No existing prepared data found.
 Creating 'data/train' 'data/test' and 'data/dev' directories...
-Creating a list of all speakers in the corpus in 'local/spkrs.txt'...
-Generating all utterance and speaker information for kaldi data preparation in 'local/uttInfo.txt'...
-WARNING: '/srv/scratch/z5160268/2020_TasteofResearch/CU_Kids_Corpus/spk-01-280a/story/1083861225250.wav' does not exist. Skipping the .trs file.
-WARNING: '/srv/scratch/z5160268/2020_TasteofResearch/CU_Kids_Corpus/spk-02-149/story/1077300949125.wav' does not exist. Skipping the .trs file.
-WARNING: No .trs files exists in 'spk-05-052/sentences/' Skipping this directory.
-WARNING: No .trs files exists in 'spk-05-062/sentences/' Skipping this directory.
-WARNING: No .trs files exists in 'spk-05-066/sentences/' Skipping this directory.
-WARNING: No .trs files exists in 'spk-05-089/sentences/' Skipping this directory.
-SUCCESS: Created a list of all utterance, speaker, filename and timing information in 'local/uttInfo.txt'
 Creating 'text' 'wav.scp' 'segments' and 'utt2spk' files in 'data/train 'data/test' and 'data/dev'...
 WARNING: Will discard 01267-10037 because transcription is <DISCARD>
 WARNING: Will discard 01294-10607 because transcription is <DISCARD>
@@ -245,42 +230,44 @@ Removing utterance 02205-13823 from data/test/segments to clean data...
 Removing utterance 02223-15269 from data/test/segments to clean data...
 Listing all unique characters in 'text' file to 'local/uniqchar.txt'...
 Listing all event labels in 'local/tags.txt'...
-There are 39 speakers and 4671 utterances in train data.
-There are 13 speakers and 1113 utterances in test data.
-There are 9 speakers and 938 utterances in dev data.
+There are 51 speakers and 5519 utterances in train data.
+There are 2 speakers and 435 utterances in test data.
+There are 8 speakers and 768 utterances in dev data.
 
-===== EXTRACTING FEATURES =====
+===== STAGE 2/11 EXTRACTING FEATURES =====
+Extracing Mel Frequency Cepstral Coefficients (MFCC) features
 
 Creating 'feats.scp' in 'data/train' 'data/test' and 'data/dev'...
-steps/make_mfcc.sh --nj 15 --cmd run.pl data/train exp/make_mfcc/train data/train/mfcc
+steps/make_mfcc.sh --nj 5 --cmd run.pl data/train exp/make_mfcc/train data/train/mfcc
 utils/validate_data_dir.sh: Successfully validated data-directory data/train
 steps/make_mfcc.sh [info]: segments file exists: using that.
 steps/make_mfcc.sh: Succeeded creating MFCC features for train
 steps/compute_cmvn_stats.sh data/train exp/make_mfcc/train data/train/mfcc
 Succeeded creating CMVN stats for train
 utils/validate_data_dir.sh: Successfully validated data-directory data/train
-fix_data_dir.sh: kept all 4671 utterances.
+fix_data_dir.sh: kept all 5519 utterances.
 fix_data_dir.sh: old files are kept in data/train/.backup
-steps/make_mfcc.sh --nj 15 --cmd run.pl data/test exp/make_mfcc/test data/test/mfcc
+steps/make_mfcc.sh --nj 5 --cmd run.pl data/test exp/make_mfcc/test data/test/mfcc
 utils/validate_data_dir.sh: Successfully validated data-directory data/test
 steps/make_mfcc.sh [info]: segments file exists: using that.
 steps/make_mfcc.sh: Succeeded creating MFCC features for test
 steps/compute_cmvn_stats.sh data/test exp/make_mfcc/test data/test/mfcc
 Succeeded creating CMVN stats for test
 utils/validate_data_dir.sh: Successfully validated data-directory data/test
-fix_data_dir.sh: kept all 1113 utterances.
+fix_data_dir.sh: kept all 435 utterances.
 fix_data_dir.sh: old files are kept in data/test/.backup
-steps/make_mfcc.sh --nj 15 --cmd run.pl data/dev exp/make_mfcc/dev data/dev/mfcc
+steps/make_mfcc.sh --nj 5 --cmd run.pl data/dev exp/make_mfcc/dev data/dev/mfcc
 utils/validate_data_dir.sh: Successfully validated data-directory data/dev
 steps/make_mfcc.sh [info]: segments file exists: using that.
 steps/make_mfcc.sh: Succeeded creating MFCC features for dev
 steps/compute_cmvn_stats.sh data/dev exp/make_mfcc/dev data/dev/mfcc
 Succeeded creating CMVN stats for dev
 utils/validate_data_dir.sh: Successfully validated data-directory data/dev
-fix_data_dir.sh: kept all 938 utterances.
+fix_data_dir.sh: kept all 768 utterances.
 fix_data_dir.sh: old files are kept in data/dev/.backup
 
-===== PREPARING LANGUAGE DATA =====
+===== STAGE 3/11 PREPARING LANGUAGE DATA =====
+Cleaning language data in preparation for training Language Model
 
 local/wsj_prepare_dict.sh 
 A    data/local/dict/cmudict/00README_FIRST.txt
@@ -743,10 +730,10 @@ Checking word_boundary.txt: silence.txt, nonsilence.txt, disambig.txt ...
 Checking word-level disambiguation symbols...
 --> data/lang/phones/wdisambig.txt exists (newer prepare_lang.sh)
 Checking word_boundary.int and disambig.int
---> generating a 23 word sequence
+--> generating a 55 word sequence
 --> resulting phone sequence from L.fst corresponds to the word sequence
 --> L.fst is OK
---> generating a 72 word sequence
+--> generating a 37 word sequence
 --> resulting phone sequence from L_disambig.fst corresponds to the word sequence
 --> L_disambig.fst is OK
 
@@ -761,9 +748,10 @@ Checking data/lang/oov.{txt, int} ...
 --> data/lang/L_disambig.fst is olabel sorted
 --> SUCCESS [validating lang directory data/lang]
 
-===== CREATING LANGUAGE MODEL =====
+===== STAGE 4/11 TRAINING LANGUAGE MODEL =====
+Training the Language Model (LM)
 
-Training Language Model (LM)...
+Training bigram LM...
 /srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../tools/srilm/bin/i686-m64
 which: no ngram-count in (/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/bin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/chainbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/featbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/fgmmbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/fstbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/gmmbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/ivectorbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/kwsbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/latbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/lmbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/nnet2bin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/nnet3bin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/nnetbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/online2bin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/onlinebin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/rnnlmbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/sgmm2bin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/sgmmbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/tfrnnlmbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../src/cudadecoderbin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/utils/:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5/../../../tools/openfst/bin:/srv/scratch/z5160268/2020_TasteofResearch/kaldi/egs/Kaldi_CU/s5:/apps/sox/14.4.2/bin:/apps/intel/Composer/debugger_2018/gdb/intel64_mic/bin:/apps/intel/Composer/compilers_and_libraries_2019.0.117/linux/bin/intel64:/apps/python/3.6.5/bin:/apps/cuda/10.1/bin:/usr/local/bin:/usr/lib64/qt-3.3/bin:/usr/lib64/ccache:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/pbs/bin:/opt/dell/srvadmin/iSM/bin)
 WARNING: story-name file does not exist in '/srv/scratch/z5160268/2020_TasteofResearch/CU_Kids_Corpus/spk-02-149/story'
@@ -807,9 +795,10 @@ LOG (arpa2fst[5.5.608~1-23868]:Read():arpa-file-parser.cc:149) Reading \2-grams:
 WARNING (arpa2fst[5.5.608~1-23868]:Read():arpa-file-parser.cc:259) Of 151 parse warnings, 30 were reported. Run program with --max_warnings=-1 to see all warnings
 LOG (arpa2fst[5.5.608~1-23868]:RemoveRedundantStates():arpa-lm-compiler.cc:359) Reduced num-states from 2673 to 2670
 
-===== TRAiNING MONOPHONE MODEL =====
+===== STAGE 5/11 TRAINING MONOPHONE MODEL =====
+Training the monophone Acoustic Model
 
-steps/train_mono.sh --nj 15 --cmd run.pl data/train/ data/lang/ exp/mono
+steps/train_mono.sh --nj 5 --cmd run.pl data/train/ data/lang/ exp/mono
 steps/train_mono.sh: Initializing monophone system.
 steps/train_mono.sh: Compiling training graphs
 steps/train_mono.sh: Aligning data equally (pass 0)
@@ -875,34 +864,35 @@ steps/train_mono.sh: Aligning data
 steps/train_mono.sh: Pass 39
 steps/diagnostic/analyze_alignments.sh --cmd run.pl data/lang/ exp/mono
 steps/diagnostic/analyze_alignments.sh: see stats in exp/mono/log/analyze_alignments.log
-38 warnings in exp/mono/log/acc.*.*.log
+80 warnings in exp/mono/log/acc.*.*.log
 6 warnings in exp/mono/log/init.log
-1724 warnings in exp/mono/log/align.*.*.log
-exp/mono: nj=15 align prob=-93.75 over 4.54h [retry=1.0%, fail=0.0%] states=132 gauss=976
+1 warnings in exp/mono/log/update.*.log
+2336 warnings in exp/mono/log/align.*.*.log
+exp/mono: nj=5 align prob=-94.42 over 5.58h [retry=1.4%, fail=0.0%] states=132 gauss=975
 steps/train_mono.sh: Done training monophone system in exp/mono
 WARNING: the --mono, --left-biphone and --quinphone options are now deprecated and ignored.
 tree-info exp/mono/tree 
 tree-info exp/mono/tree 
+fstminimizeencoded 
 fsttablecompose data/lang/L_disambig.fst data/lang/G.fst 
 fstdeterminizestar --use-log=true 
 fstpushspecial 
-fstminimizeencoded 
 fstisstochastic data/lang/tmp/LG.fst 
 -0.110361 -0.110765
 [info]: LG not stochastic.
-fstcomposecontext --context-size=1 --central-position=0 --read-disambig-syms=data/lang/phones/disambig.int --write-disambig-syms=data/lang/tmp/disambig_ilabels_1_0.int data/lang/tmp/ilabels_1_0.76328 data/lang/tmp/LG.fst 
+fstcomposecontext --context-size=1 --central-position=0 --read-disambig-syms=data/lang/phones/disambig.int --write-disambig-syms=data/lang/tmp/disambig_ilabels_1_0.int data/lang/tmp/ilabels_1_0.79817 data/lang/tmp/LG.fst 
 fstisstochastic data/lang/tmp/CLG_1_0.fst 
 -0.110361 -0.110765
 [info]: CLG not stochastic.
 make-h-transducer --disambig-syms-out=exp/mono/graph/disambig_tid.int --transition-scale=1.0 data/lang/tmp/ilabels_1_0 exp/mono/tree exp/mono/final.mdl 
 fsttablecompose exp/mono/graph/Ha.fst data/lang/tmp/CLG_1_0.fst 
 fstdeterminizestar --use-log=true 
-fstminimizeencoded 
-fstrmsymbols exp/mono/graph/disambig_tid.int 
 fstrmepslocal 
+fstrmsymbols exp/mono/graph/disambig_tid.int 
+fstminimizeencoded 
 fstisstochastic exp/mono/graph/HCLGa.fst 
-0.000114326 -0.205321
+0.00012501 -0.205321
 HCLGa is not stochastic
 add-self-loops --self-loop-scale=0.1 --reorder=true exp/mono/final.mdl exp/mono/graph/HCLGa.fst 
-steps/decode.sh --config conf/decode.config --nj 15 --cmd run.pl exp/mono/graph data/test exp/mono/decode
-Refusing to split data because number of speakers 13 is less than the number of output .scp files 15 at utils/split_scp.pl line 114, <I> line 1113.
+steps/decode.sh --config conf/decode.config --nj 5 --cmd run.pl exp/mono/graph data/test exp/mono/decode
+Refusing to split data because number of speakers 2 is less than the number of output .scp files 5 at utils/split_scp.pl line 114, <I> line 435.
