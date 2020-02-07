@@ -73,9 +73,9 @@ if [ $stage -le 3 ]; then
     utils/fix_data_dir.sh data/${dataset}_hires  # remove segments with problems
   done
 
-  # Take the first 500 utterances (about 1/8th of the data) this will be used
+  # Take the first 30k utterances (about 1/8th of the data) this will be used
   # for the diagubm training
-  utils/subset_data_dir.sh --first data/${train_set}_hires 500 data/${train_set}_30k_hires
+  utils/subset_data_dir.sh --first data/${train_set}_hires 30000 data/${train_set}_30k_hires
   utils/data/remove_dup_utts.sh 200 data/${train_set}_30k_hires data/${train_set}_30k_nodup_hires  # 33hr
 fi
 

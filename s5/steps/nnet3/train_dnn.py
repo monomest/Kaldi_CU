@@ -54,7 +54,7 @@ def get_args():
 
     # egs extraction options
     parser.add_argument("--egs.frames-per-eg", type=int, dest='frames_per_eg',
-                        default=8,
+                        default=4,
                         help="Number of output labels per example")
 
     # trainer options

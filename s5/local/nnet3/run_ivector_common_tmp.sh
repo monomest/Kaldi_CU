@@ -53,7 +53,7 @@ if [ $stage -le 3 ]; then
 
     utils/data/perturb_data_dir_volume.sh data/${dataset}_hires
 
-    steps/make_mfcc.sh --nj 16 --mfcc-config conf/mfcc_hires.conf \
+    steps/make_mfcc.sh --nj 5 --mfcc-config conf/mfcc_hires.conf \
         --cmd "$train_cmd" data/${dataset}_hires exp/make_hires/$dataset $mfccdir;
     steps/compute_cmvn_stats.sh data/${dataset}_hires exp/make_hires/${dataset} $mfccdir;
 
@@ -65,7 +65,7 @@ if [ $stage -le 3 ]; then
   for dataset in dev test ; do
     # Create MFCCs for the eval set
     utils/copy_data_dir.sh data/$dataset data/${dataset}_hires
-    steps/make_mfcc.sh --cmd "$train_cmd" --nj 10 --mfcc-config conf/mfcc_hires.conf \
+    steps/make_mfcc.sh --cmd "$train_cmd" --nj 5 --mfcc-config conf/mfcc_hires.conf \
         data/${dataset}_hires exp/make_hires/$dataset $mfccdir;
     steps/compute_cmvn_stats.sh data/${dataset}_hires exp/make_hires/$dataset $mfccdir;
     utils/fix_data_dir.sh data/${dataset}_hires  # remove segments with problems
@@ -91,7 +91,7 @@ fi
 
 if [ $stage -le 6 ]; then
   # To train a diagonal UBM we don't need very much data, so use the smallest subset.
-  steps/online/nnet2/train_diag_ubm.sh --cmd "$train_cmd" --nj 30 --num-frames 200000 \
+  steps/online/nnet2/train_diag_ubm.sh --cmd "$train_cmd" --nj 5 --num-frames 200000 \
     data/${train_set}_10k_hires 512 $dir/tri3b $dir/diag_ubm
 fi
 
@@ -99,7 +99,7 @@ if [ $stage -le 7 ]; then
   # iVector extractors can be sensitive to the amount of data, but this one has a
   # fairly small dim (defaults to 100) so we don't use all of it, we use just the
   # 100k subset (just under half the data).
-  steps/online/nnet2/train_ivector_extractor.sh --cmd "$train_cmd" --nj 10 \
+  steps/online/nnet2/train_ivector_extractor.sh --cmd "$train_cmd" --nj 5 \
     data/train_hires $dir/diag_ubm $dir/extractor || exit 1;
 fi
 
@@ -113,11 +113,11 @@ if [ $stage -le 8 ]; then
   # speaker history reset each 2 utterances (seted by --utts-per-spk-max 2)
   utils/data/modify_speaker_info.sh --utts-per-spk-max 2 data/${train_set}_hires data/${train_set}_max2_hires
   
-  steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj 30 \
+  steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj 5 \
     data/${train_set}_max2_hires $dir/extractor $dir/ivectors_$train_set || exit 1;
 
   for data_set in dev test ; do
-    steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj 30 \
+    steps/online/nnet2/extract_ivectors_online.sh --cmd "$train_cmd" --nj 5 \
       data/${data_set}_hires $dir/extractor $dir/ivectors_$data_set || exit 1;
   done
 fi
