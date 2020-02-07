@@ -9,3 +9,4 @@ lib
 lib64
 pip-selfcheck.json
 pyvenv.cfg
+s5/mfcc_hires
