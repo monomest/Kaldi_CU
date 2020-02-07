@@ -18,6 +18,8 @@
 #	 'data/[train, test, dev]/spkrs' which is a file that lists all
 #         the unique speakers from that data portion
 #
+#	 'data/[train, test, dev]/spk2utt'
+#
 #	 'local/tags.txt' which is a file listing all the transcription
 #         event labels
 #

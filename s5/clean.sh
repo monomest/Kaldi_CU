@@ -28,17 +28,17 @@ read -r -p "(0) STAGE 0: Remove everything, including .wav files (1) STAGE 1: Re
 			rm $f
 		done
 		# Remove common directories
-		for $d in "${commond[@]}"; do
+		for d in "${commond[@]}"; do
 			echo "Removing directory $d."
 			rm -r $d
 		done 
 		# Remove local files
-		for $f in "${localf[@]}"; do
+		for f in "${localf[@]}"; do
 			echo "Removing file $f."
 			rm $f
 		done
 		# Remove local/data
-		for $d in "${locald[@]}"; do
+		for d in "${locald[@]}"; do
 			echo "Removing directory $d."
 			rm -r $d
 		done
@@ -56,7 +56,7 @@ read -r -p "(0) STAGE 0: Remove everything, including .wav files (1) STAGE 1: Re
                         rm $f 
                 done 
                 # Remove common directories
-                for $d in "${commond[@]}"; do
+                for d in "${commond[@]}"; do
                         echo "Removing directory $d."
                         rm -r $d 
                 done   
@@ -66,7 +66,7 @@ read -r -p "(0) STAGE 0: Remove everything, including .wav files (1) STAGE 1: Re
 		echo "Copying all split data portion files into s5/data"
 		for dir in dev test train; do
         		mkdir data/$dir
-        		for file in segments spkrs text utt2spk wav.scp; do
+        		for file in segments spkrs text utt2spk wav.scp spk2utt; do
                 		cp local/data/$dir/$file data/$dir/$file
         		done
 		done

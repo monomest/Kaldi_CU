@@ -47,8 +47,8 @@ if [ $stage -le 1 ]; then
 	echo "Generating local/uttspkr.txt which has all the information required for kaldi data preparation..."
 	local/cu_data_prep.sh $CU_ROOT $CUR_DIR
 
-	# Creating 'text', 'wav.scp', 'segments' and 'utt2spk'
-	echo "Creating 'text' 'wav.scp' 'segments' and 'utt2spk' files in 'data/train 'data/test' and 'data/dev'..."
+	# Creating 'text', 'wav.scp', 'segments', 'utt2spk' and 'spk2utt'
+	echo "Creating 'text' 'wav.scp' 'segments' 'utt2spk' and 'spk2utt' files in 'data/train 'data/test' and 'data/dev'..."
         local/cu_split_data.sh
 
 	# Copying these created files into local/data directory

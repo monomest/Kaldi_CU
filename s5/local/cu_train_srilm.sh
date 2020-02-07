@@ -5,6 +5,8 @@
 # About: This code is for preparing the data/local/dict directory of CU Kids Speech Corpus
 #        for kaldi ASR training.
 #        Should be run from s5 directory.
+# Output: data/local/lm_srilm directory
+#         data/local/lm_srilm/tmp directory and contents 
 
 CU_ROOT=$1
 CUR_DIR=$2
@@ -44,14 +46,12 @@ local/get_sentences.sh $CU_ROOT $CUR_DIR $dir
 local/get_summaries.sh $CU_ROOT $CUR_DIR $dir
 
 # Concatenate all the scripted story, sentences and summary text in file $dir/scripted_txt.tmp
-# Also format the text
 for file in $dir/tmp/sentences.txt $dir/tmp/stories.txt $dir/tmp/summaries.txt; do
-	# Remove floating hyphens, remove all empty lines, convert to UPPERCASE
-	cat $file | sed 's/\( \|^\)-\([A-Za-z]\)/\1\2/g; s/\( \|^\)-\(\|^\)/\1\2/g; s/\([A-Za-z]\)-\( \|$\)/\1\2/g; s/\([A-Za-z]\)-\( \|^\)/\1\2/g;' | sed '/^$/d' | tr [:lower:] [:upper:] >> $dir/scripted_txt.tmp
+	cat $file >> $dir/scripted_txt.tmp
 done
 
 file=$dir/scripted_txt.tmp
-local/format_lm_data.sh $file
+local/text_normal.sh $CUR_DIR $file
 
 #Get unique set of OGI words 
 cat $dir/scripted_txt.tmp | tr " " "\n" | sort -u > $dir/scripted_words.tmp

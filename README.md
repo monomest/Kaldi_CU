@@ -32,6 +32,10 @@ module load python/3.6.5
 module load intel/19.0.0.117
 module load sox/14.4.2
 ```
+To install any python packages not in katana, use a virtual environment: https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
+The virtual environment I am using currently is kaldi/egs/Kaldi_CU. 
+Includes num2words package. 
+
 **Leaving katana**
 Asumming you are inside a screen, and inside a requested GPU node. 
 1. ```CtrlA D``` to detach from the screen session.
