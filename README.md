@@ -32,8 +32,10 @@ module load python/3.6.5
 module load intel/19.0.0.117
 module load sox/14.4.2
 ```
+Note: If there is an error message saying Permission Denied when running a script, use ```chmod u+x -R /path/to/directory``` to change the permissions of all the files in the directory so that you have permission to execute. 
+
 To install any python packages not in katana, use a virtual environment: https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/
-The virtual environment I am using currently is kaldi/egs/Kaldi_CU. 
+The virtual environment I am using currently is kaldi/egs/Kaldi_CU ```source Kaldi_CU/bin/activate``` 
 Includes num2words package. 
 
 **Leaving katana**
