@@ -8,7 +8,7 @@
 # note: the last column is a version of tdnn_d that was done after the
 # changes for the 5.1 version of Kaldi (variable minibatch-sizes, etc.)
 
-stage=10
+stage=0
 affix=
 train_stage=-10
 has_fisher=false
@@ -20,7 +20,6 @@ remove_egs=true
 . ./cmd.sh
 . ./path.sh
 . ./utils/parse_options.sh
-
 
 if ! cuda-compiled; then
   cat <<EOF && exit 1
@@ -67,12 +66,10 @@ if [ $stage -le 9 ]; then
   relu-renorm-layer name=tdnn6 dim=1024
   output-layer name=output input=tdnn6 dim=$num_targets max-change=1.5
 EOF
-
 steps/nnet3/xconfig_to_configs.py --xconfig-file $dir/configs/network.xconfig --config-dir $dir/configs/
 fi
 
 if [ $stage -le 10 ]; then
-
   steps/nnet3/train_dnn.py --stage=$train_stage \
     --cmd="$decode_cmd" \
     --feat.online-ivector-dir exp/nnet3_vp/ivectors_${train_set} \
