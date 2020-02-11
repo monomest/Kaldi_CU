@@ -19,6 +19,12 @@ storiesfile=$dir/tmp/stories.txt
 
 noname=0
 
+# To enable getting Language Model data from:
+# txt files: let txt=1
+# trs files: let trs=1
+txtopt=0
+trsopt=1
+
 touch $allIDs
 cd $CU_ROOT
 
@@ -26,10 +32,10 @@ cd $CU_ROOT
 spkrs=$(find . -type d -name "spk*")
 for spkr in $spkrs; do
 	cd $spkr/story
-	# If .txt files exist, then use them
 	txt=$(find . -name "*.txt")
 	trs=$(find . -name "*.trs")
-	if [ -n "$txt" ]; then
+	# If getting data from .txt files and the .txt files exists, then use them
+	if [[ "$txtopt" -eq 1 ]] && [ -n "$txt" ]; then
 		# Get the storyID
 		storyID=$(grep -rnw -e 'STORY ID' | sed 's@.*> @@'| sort -u)
 		# If the storyID has already been recorded then skip this speaker
@@ -55,8 +61,8 @@ for spkr in $spkrs; do
 			# total list of story text file, called $storiesfile
 			cat $storytmp >> $storiesfile
 		fi
-	# Else if .trs files exist, use them
-	elif [ -n "$trs" ]; then
+	# Else if getting data from .trs files and .trs files exist, use them
+	elif [[ "$trsopt" -eq 1 ]] && [ -n "$trs" ]; then
 		# Get the story ID
 		FILE=../story-name
 		if [ -f "$FILE" ]; then
@@ -79,7 +85,13 @@ for spkr in $spkrs; do
                         touch $storytmp
                         # Iterate through every .trs file and write the text to local/storytmp_$storyID.txt file
                         for trsfile in $trs; do
- 	                	start=0
+ 	                	# Check if the transcription has a corresponding .wav file.
+				# If not, skip the transcription.
+				audiopath=$(readlink -f $trsfile | sed 's/....$//')
+				audiopath=$(echo "${audiopath}.wav")
+				[[ -e "$audiopath" ]] || echo "WARNING: '$audiopath' does not exist. Skipping the .trs file for story '$storyID'"
+				[[ -e "$audiopath" ]] || break
+				start=0
 				while IFS= read -r line
 				do
 					# When the transcription starts
