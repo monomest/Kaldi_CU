@@ -25,7 +25,7 @@ python3 $CUR_DIR/local/number2words.py $file
 sed -i 's/\(.*\)/\U\1/' $file
 
 # 3. Deals with "MR. " "MRS. " and "MS. "
-sed -i "s/MS. /MS /g; s/MRS. /MRS /g; s/MR. /MR /g" $file
+sed -i "s/MS\. /MS /g; s/MRS\. /MRS /g; s/MR\. /MR /g" $file
 
 # 4. Replaces "&" with "AND"
 sed -i "s/\&/AND/g" $file

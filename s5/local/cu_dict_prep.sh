@@ -19,7 +19,7 @@ local/wsj_prepare_dict.sh || exit 1
 
 #Check that all words are in the lexicon
 #Get unique set of OGI words
-cat data/train/text data/test/text data/dev/text | cut -d ' ' -f2- | tr ' ' '\n' | sort -u | sed '/^\s*$/d' > $dir/cu-words.tmp
+cat data/train/text data/test/text data/dev/text | cut -d' ' -f2- | tr ' ' '\n' | sort -u | sed '/^\s*$/d' > $dir/cu-words.tmp
 
 #Get unique set of cmu dict words
 cat $dir/cmudict/cmudict.0.7a | sed '/^;;;/d' | gawk '{print $1}' | \

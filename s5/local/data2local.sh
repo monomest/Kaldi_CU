@@ -8,7 +8,6 @@
 CUR_DIR=$1
 
 # Copy all the dev, test and train files into local
-echo "Copying all split data portion files into local/data"
 for dir in data/dev data/test data/train; do
 	mkdir -p $CUR_DIR/local/$dir
 	for file in segments spkrs text utt2spk wav.scp spk2utt; do

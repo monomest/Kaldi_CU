@@ -51,7 +51,12 @@ if [ $stage -le 1 ]; then
 	echo "Creating 'text' 'wav.scp' 'segments' 'utt2spk' and 'spk2utt' files in 'data/train 'data/test' and 'data/dev'..."
         local/cu_split_data.sh
 
+	# Normalising the transcription
+	echo "Normalising transcription of 'text' files..."
+	local/textfile_normal.sh
+
 	# Copying these created files into local/data directory
+	echo "Copying files into local/data directory..."
 	local/data2local.sh $CUR_DIR
 
 	# Find the number of speakers and utterances in train, test and dev data
