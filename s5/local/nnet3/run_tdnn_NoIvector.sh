@@ -41,8 +41,8 @@ dir=${dir}$suffix
 train_set=train
 ali_dir=exp/tri3b_ali
 
-#local/nnet3/run_ivector_common_tmp.sh --stage $stage \
-#        --speed-perturb $speed_perturb || exit 1;
+local/nnet3/run_ivector_common_tmp.sh --stage $stage \
+        --speed-perturb $speed_perturb || exit 1;
 
 if [ $stage -le 9 ]; then
   echo "$0: creating neural net configs using the xconfig parser";
