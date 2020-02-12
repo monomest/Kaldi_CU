@@ -7,8 +7,10 @@
 #        To be run from the s5 directory.
 # Output: local/output files
 
-stage=tri3b
-OUT_DIR=exp/$stage/decode/scoring    # Directory of the output
+#stage=tri3b
+#OUT_DIR=exp/$stage/decode/scoring    # Directory of the output
+stage=tri3b_mmi
+OUT_DIR=exp/$stage/decode2/scoring
 output=local/output    # Path to our created output files
 mkdir -p $output
 output=$output/$stage
@@ -24,8 +26,8 @@ for hyp in $tra; do
     	name=$(cut -d "." -f 1 <<< "$name")
         # Get the hypothesised transcription of the .tra file, converting from int to text
         # Output this to local/output/$name.txt
-        cat $hyp | utils/int2sym.pl -f 2- exp/$stage/graph/words.txt > $output/$name-hyp.txt
-	#cat exp/tri3b/decode/scoring/7.tra | utils/int2sym.pl -f 2- exp/tri3b/graph/words.txt > output.txt
+        #cat $hyp | utils/int2sym.pl -f 2- exp/$stage/graph/words.txt > $output/$name-hyp.txt
+        cat $hyp | utils/int2sym.pl -f 2- exp/tri3b/graph/words.txt > $output/$name-hyp.txt
 done
 # Copy the reference text into local/output
 cp $OUT_DIR/test_filt.txt $output/ref.txt
