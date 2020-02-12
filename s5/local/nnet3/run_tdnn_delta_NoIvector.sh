@@ -49,14 +49,12 @@ if [ $stage -le 9 ]; then
 
   mkdir -p $dir/configs
   cat <<EOF > $dir/configs/network.xconfig
-# input dim=100 name=ivector
   input dim=40 name=input
   # delta-layer name=delta input=Append(-2,-1,0,1,2)
   delta-layer name=delta 
   # please note that it is important to have input layer with the name=input
   # as the layer immediately preceding the fixed-affine-layer to enable
   # the use of short notation for the descriptor
-#  no-op-component name=input2 input=Append(-2,-1,0,1,2,ReplaceIndex(ivector, t, 0))
   no-op-component name=input2 input=Append(-2,-1,0,1,2)
   # the first splicing is moved before the lda layer, so no splicing here
   relu-renorm-layer name=tdnn1 input=input2 dim=1024
@@ -73,7 +71,6 @@ fi
 if [ $stage -le 10 ]; then
   steps/nnet3/train_dnn.py --stage=$train_stage \
     --cmd="$decode_cmd" \
-    --feat.online-ivector-dir exp/nnet3_vp/ivectors_${train_set} \
     --feat.cmvn-opts="--norm-means=false --norm-vars=false" \
     --trainer.num-epochs 2 \
     --trainer.optimization.num-jobs-initial 1 \
@@ -99,7 +96,6 @@ if [ $stage -le 11 ]; then
     (
     num_jobs=`cat data/${decode_set}_hires/utt2spk|cut -d' ' -f2|sort -u|wc -l`
     steps/nnet3/decode.sh --nj $num_jobs --cmd "$decode_cmd" \
-      --online-ivector-dir exp/nnet3_vp/ivectors_${decode_set} \
       $graph_dir data/${decode_set}_hires $dir/decode_${decode_set}_hires || exit 1;
     ) &
   done
