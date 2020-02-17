@@ -9,8 +9,10 @@
 
 #stage=tri3b
 #OUT_DIR=exp/$stage/decode/scoring    # Directory of the output
-stage=tri3b_mmi
-OUT_DIR=exp/$stage/decode2/scoring
+#stage=tri3b_mmi
+#OUT_DIR=exp/$stage/decode2/scoring
+stage=nnet3_vp
+OUT_DIR=exp/$stage/tdnn/decode_test_hires/scoring
 output=local/output    # Path to our created output files
 mkdir -p $output
 output=$output/$stage
@@ -22,8 +24,10 @@ tra=$(find $OUT_DIR -type f -name "*.tra")
 echo "Converting hypothesis files from int to text..."
 for hyp in $tra; do
         # Get the name of the .tra file
-        name=$(cut -d "/" -f 5 <<< "$hyp")
-    	name=$(cut -d "." -f 1 <<< "$name")
+        #name=$(cut -d "/" -f 5 <<< "$hyp")
+    	#name=$(cut -d "." -f 1 <<< "$name")
+        name=$(cut -d "/" -f 6 <<< "$hyp")
+        name=$(cut -d "." -f 1 <<< "$name")
         # Get the hypothesised transcription of the .tra file, converting from int to text
         # Output this to local/output/$name.txt
         #cat $hyp | utils/int2sym.pl -f 2- exp/$stage/graph/words.txt > $output/$name-hyp.txt
