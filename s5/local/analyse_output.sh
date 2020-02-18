@@ -33,8 +33,17 @@ for hyp in $tra; do
         #cat $hyp | utils/int2sym.pl -f 2- exp/$stage/graph/words.txt > $output/$name-hyp.txt
         cat $hyp | utils/int2sym.pl -f 2- exp/tri3b/graph/words.txt > $output/$name-hyp.txt
 done
+
 # Copy the reference text into local/output
 cp $OUT_DIR/test_filt.txt $output/ref.txt
+
+# Sort the hyp files in local, in case they are out of order
+txt=$(find $output -type f -name "*.txt")
+echo "$txt"
+for file in $txt; do
+	# Sort by first field, which is utterance ID
+	sort -n -o $file $file -t ' ' -k1
+done
 
 echo "Creating diff files..."
 # Iterate through all the newly created hypothesis files and create a diff file 
